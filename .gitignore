@@ -1,0 +1,26 @@
+# Node modules
+node_modules/
+*/node_modules/
+
+# Logs
+logs/
+*.log
+
+# Dependency directories
+dist/
+build/
+
+# Environment variables
+.env
+.env.*
+
+# macOS system files
+.DS_Store
+
+# IDE files
+.vscode/
+.idea/
+
+# Uploads and generated files
+uploads/
+src/uploads/
