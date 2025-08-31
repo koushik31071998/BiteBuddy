@@ -1,52 +1,92 @@
 import React from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+
 import LoginPage from "./pages/auth/loginPage";
 import RegisterPage from "./pages/auth/registerPage";
-import DashboardPage from "./pages/dashboard/dashBoardPage";
+import DashboardPage from "./pages/dashboard/dashboardPage";
 import CatalogPage from "./pages/catalog/catalogPage";
-import AddCatalogPage from "./pages/catalog/addCatalogPage";
+import CartPage from "./pages/cartPage/cartPage";
+import CheckoutPage from "./pages/checkoutPage/checkoutPage";
+import OrdersPage from "./pages/ordersPage/ordersPage";
+import NavBar from "./components/navbar";
 
 const PrivateRoute = ({ children }) => {
   const token = localStorage.getItem("token");
   return token ? children : <Navigate to="/login" />;
 };
 
-export default function AppRoutes() {
+
+// Layout with NavBar for all main pages
+function MainLayout({ children }) {
   return (
     <>
-        <BrowserRouter>
+      <NavBar />
+      <div style={{ paddingTop: 110 }}>{children}</div>
+    </>
+  );
+}
+
+export default function AppRoutes() {
+  return (
+    <BrowserRouter>
       <Routes>
         <Route path="/" element={<Navigate to="/login" />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+
         <Route
           path="/dashboard"
           element={
             <PrivateRoute>
-              <DashboardPage />
+              <MainLayout>
+                <DashboardPage />
+              </MainLayout>
             </PrivateRoute>
           }
         />
-        <Route path="*" element={<Navigate to="/login" />} />
         <Route
           path="/catalog"
           element={
             <PrivateRoute>
-              <CatalogPage />
+              <MainLayout>
+                <CatalogPage />
+              </MainLayout>
             </PrivateRoute>
           }
         />
         <Route
-          path="/catalog/add"
+          path="/cart"
           element={
             <PrivateRoute>
-              <AddCatalogPage />
+              <MainLayout>
+                <CartPage />
+              </MainLayout>
             </PrivateRoute>
           }
         />
+        <Route
+          path="/checkout"
+          element={
+            <PrivateRoute>
+              <MainLayout>
+                <CheckoutPage />
+              </MainLayout>
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/orders"
+          element={
+            <PrivateRoute>
+              <MainLayout>
+                <OrdersPage />
+              </MainLayout>
+            </PrivateRoute>
+          }
+        />
+
+        <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
     </BrowserRouter>
-    </>
-
   );
 }

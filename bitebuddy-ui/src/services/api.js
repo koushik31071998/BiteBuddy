@@ -2,7 +2,7 @@ import axios from "axios";
 
 // ✅ Base API instance
 const api = axios.create({
-  baseURL: "http://localhost:5000/api", // change if backend is on different port
+  baseURL: "http://localhost:5000/api", // adjust if backend runs elsewhere
 });
 
 // ✅ Add token automatically to every request if exists
@@ -32,9 +32,12 @@ export const getMe = async () => {
   return res.data;
 };
 
+// ----------------------
+// CATALOG ENDPOINTS
+// ----------------------
 export const fetchCatalog = async () => {
   const res = await api.get("/catalog");
-  console.log('Fetched catalog:', res.data);
+  console.log("Fetched catalog:", res.data);
   return res.data.items;
 };
 
@@ -42,5 +45,33 @@ export const addCatalogItem = (formData) =>
   api.post("/catalog", formData, {
     headers: { "Content-Type": "application/json" },
   });
+
+// ----------------------
+// ORDER ENDPOINTS
+// ----------------------
+
+// ✅ Place a new order
+export const placeOrder = async (items) => {
+  const res = await api.post("/orders", { items });
+  return res.data;
+};
+
+// ✅ Get logged-in user's orders
+export const fetchMyOrders = async () => {
+  const res = await api.get("/orders");
+  return res.data;
+};
+
+// ✅ Cancel an order (user only)
+export const cancelOrder = async (orderId) => {
+  const res = await api.post(`/orders/${orderId}/cancel`);
+  return res.data;
+};
+
+// ✅ Update order status (admin only)
+export const updateOrderStatus = async (orderId, status) => {
+  const res = await api.patch(`/orders/${orderId}`, { status });
+  return res.data;
+};
 
 export default api;
