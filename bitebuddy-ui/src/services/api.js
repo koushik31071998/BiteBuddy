@@ -36,7 +36,7 @@ export const getMe = async () => {
 // CATALOG ENDPOINTS
 // ----------------------
 export const fetchCatalog = async () => {
-  const res = await api.get("/catalog");
+  const res = await api.get("/catalog?limit=30&offset=0");
   console.log("Fetched catalog:", res.data);
   return res.data.items;
 };
@@ -73,5 +73,19 @@ export const updateOrderStatus = async (orderId, status) => {
   const res = await api.patch(`/orders/${orderId}`, { status });
   return res.data;
 };
+
+// ----------------------
+// PAYMENTS ENDPOINTS (Mock)
+// ----------------------
+export const createPayment = async (orderId, userId) => {
+  const res = await api.post(`/payments/create`, { orderId, userId });
+  return res.data; // { paymentId, clientSecret }
+};
+
+export const confirmPayment = async (orderId, paymentId) => {
+  const res = await api.post(`/payments/confirm`, { orderId, paymentId });
+  return res.data; // { success, order }
+};
+
 
 export default api;

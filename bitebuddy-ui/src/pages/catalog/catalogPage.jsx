@@ -10,7 +10,6 @@ export default function CatalogPage() {
 
   // Food image URLs
   const foodImages = [
-    "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=200&h=150&fit=crop",
     "https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=200&h=150&fit=crop",
     "https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=200&h=150&fit=crop",
     "https://images.unsplash.com/photo-1576618148400-f54bed99fcfd?w=200&h=150&fit=crop",
@@ -21,7 +20,6 @@ export default function CatalogPage() {
     "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=200&h=150&fit=crop",
     "https://images.unsplash.com/photo-1550317138-10000687a72b?w=200&h=150&fit=crop",
     "https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=200&h=150&fit=crop",
-    "https://images.unsplash.com/photo-1563379091339-03246963d51a?w=200&h=150&fit=crop",
     "https://images.unsplash.com/photo-1534938665420-4193effeacc4?w=200&h=150&fit=crop",
     "https://images.unsplash.com/photo-1585032226651-759b368d7246?w=200&h=150&fit=crop",
     "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=200&h=150&fit=crop",
@@ -39,6 +37,7 @@ export default function CatalogPage() {
     const loadCatalog = async () => {
       try {
         const data = await fetchCatalog();
+        console.log("Fetched catalog items:", data);
         setItems(data);
       } catch (err) {
         console.error("Failed to load catalog", err);
@@ -51,9 +50,12 @@ export default function CatalogPage() {
     addToCart(item);
   }
 
+  // Interactive hover state for cards
+  const [hoveredIdx, setHoveredIdx] = useState(null);
+
   return (
     <div style={styles.container}>
-      <h2>🍔 BiteBuddy Menu</h2>
+      <h2 style={styles.heading}>🍔 BiteBuddy Menu</h2>
 
       <button onClick={() => navigate("/cart")} style={styles.cartButton}>
         🛒 Go to Cart
@@ -61,15 +63,22 @@ export default function CatalogPage() {
 
       <div style={styles.grid}>
         {items.map((item, index) => (
-          <div key={item._id} style={styles.card}>
+          <div
+            key={item._id}
+            style={hoveredIdx === index ? { ...styles.card, ...styles.cardHover } : styles.card}
+            onMouseEnter={() => setHoveredIdx(index)}
+            onMouseLeave={() => setHoveredIdx(null)}
+            tabIndex={0}
+            aria-label={item.name}
+          >
             <img
               src={getRandomImage(index)}
               alt={item.name}
               style={styles.image}
             />
-            <h3>{item.name}</h3>
-            <p>{item.description}</p>
-            <p style={styles.price}>₹{item.price}</p>
+            <h3 style={styles.itemName}>{item.name}</h3>
+            <p style={styles.itemDesc}>{item.description}</p>
+            <p style={styles.price}>${item.price}</p>
             {cart.some((cartItem) => cartItem._id === item._id) ? (
               <p style={styles.addedMessage}>✔️ Added to Cart</p>
             ) : (
@@ -89,12 +98,30 @@ const styles = {
   container: {
     padding: "20px",
     marginTop: "40px",
+    minHeight: "100vh",
+    background: "linear-gradient(120deg, #f8fafc 0%, #e9ecef 100%)",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+  },
+  heading: {
+    marginBottom: "18px",
+    fontSize: "2rem",
+    color: "#22223b",
+    fontWeight: 800,
+    letterSpacing: "-1px",
+    textShadow: "0 2px 8px rgba(0,0,0,0.04)",
+    textAlign: "center",
   },
   grid: {
     display: "grid",
     gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
-    gap: "28px",
+    gap: "40px",
     marginTop: "32px",
+    width: "100%",
+    maxWidth: "1200px",
+    justifyItems: "center",
   },
   card: {
     display: "flex",
@@ -102,25 +129,45 @@ const styles = {
     justifyContent: "space-between",
     alignItems: "center",
     border: "1.5px solid #e5e7eb",
-    borderRadius: "14px",
-    width: "100%",
+    borderRadius: "25px",
+    width: "95%",
     minWidth: "240px",
     maxWidth: "320px",
     minHeight: "370px",
     background: "#fff",
-    padding: "20px 18px 18px 18px",
+    padding: "24px 20px 20px 20px",
     textAlign: "center",
     boxShadow: "0 4px 18px 0 rgba(31, 38, 135, 0.08)",
-    transition: "box-shadow 0.2s, transform 0.2s",
+    transition: "box-shadow 0.2s, transform 0.2s, background 0.2s",
     position: "relative",
+    animation: "fadeIn 0.7s cubic-bezier(.4,0,.2,1)",
+  },
+  cardHover: {
+    boxShadow: "0 8px 32px rgba(0,123,255,0.18)",
+    background: "linear-gradient(90deg, #e3f2fd 0%, #fff 100%)",
+    transform: "scale(1.04)",
   },
   image: {
     width: "100%",
     height: "160px",
     objectFit: "cover",
-    borderRadius: "8px",
+    borderRadius: "10px",
     marginBottom: "16px",
     boxShadow: "0 2px 8px rgba(0,0,0,0.07)",
+    transition: "transform 0.2s",
+  },
+  itemName: {
+    fontWeight: 700,
+    fontSize: "1.15rem",
+    marginBottom: "6px",
+    letterSpacing: "-0.5px",
+    color: "#22223b",
+  },
+  itemDesc: {
+    fontSize: "0.98rem",
+    color: "#6c757d",
+    textAlign: "center",
+    marginBottom: "0",
   },
   price: {
     fontWeight: "bold",
@@ -159,5 +206,7 @@ const styles = {
   addedMessage: {
     color: "green",
     fontWeight: "bold",
+    marginTop: "10px",
   },
 };
+

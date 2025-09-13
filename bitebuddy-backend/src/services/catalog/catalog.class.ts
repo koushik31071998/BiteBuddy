@@ -5,7 +5,7 @@ export default class CatalogService {
     return await Catalog.create(data);
   }
 
-  static async getItems(page = 1, limit = 10, category?: string, search?: string) {
+  static async getItems(page = 1, limit = 50, category?: string, search?: string) {
     const query: any = {};
     if (category) query.category = category;
     if (search) query.name = { $regex: search, $options: 'i' };

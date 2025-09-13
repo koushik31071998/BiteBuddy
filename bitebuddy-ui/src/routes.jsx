@@ -9,6 +9,7 @@ import CartPage from "./pages/cartPage/cartPage";
 import CheckoutPage from "./pages/checkoutPage/checkoutPage";
 import OrdersPage from "./pages/ordersPage/ordersPage";
 import NavBar from "./components/navbar";
+import PaymentPage from "./pages/payments/paymentsPage";
 
 const PrivateRoute = ({ children }) => {
   const token = localStorage.getItem("token");
@@ -38,9 +39,9 @@ export default function AppRoutes() {
           path="/dashboard"
           element={
             <PrivateRoute>
-              <MainLayout>
+              {/* <MainLayout> */}
                 <DashboardPage />
-              </MainLayout>
+              {/* </MainLayout> */}
             </PrivateRoute>
           }
         />
@@ -80,6 +81,16 @@ export default function AppRoutes() {
             <PrivateRoute>
               <MainLayout>
                 <OrdersPage />
+              </MainLayout>
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/payment"
+          element={
+            <PrivateRoute>
+              <MainLayout>
+                <PaymentPage />
               </MainLayout>
             </PrivateRoute>
           }

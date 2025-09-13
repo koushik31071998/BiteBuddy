@@ -29,6 +29,6 @@ app.get('/api/health', (req, res) => {
 app.use('/api/auth', authRouter);
 app.use('/api/catalog', catalogRouter )
 app.use('/api/orders', ordersRouter);
-app.use('/api/payment', paymentRouter);
+app.use('/api/payments', paymentRouter);
 
 export default app;

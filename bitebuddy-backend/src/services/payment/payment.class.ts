@@ -45,6 +45,7 @@ export default class PaymentService {
    */
   static async confirmPayment(orderId: string, paymentId: string) {
     const order = await Order.findById(orderId);
+    console.log("Confirming payment for order:", orderId, "with paymentId:", paymentId);
     if (!order) throw new Error("Order not found");
 
     if (order.status !== "pending") {
